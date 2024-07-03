@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Requests\StoreProjetoRequest;
 use App\Models\Projeto;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Cloudinary\Cloudinary;
 
 class ApiProjetoController extends Controller
 {
@@ -34,12 +36,24 @@ class ApiProjetoController extends Controller
      */
     public function store(StoreProjetoRequest $request)
     {
-        $projeto = Projeto::create($request->all());
+        $request->validate([
+            'CaminhoImagem' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $cloudinary = new Cloudinary();
+
+        $uploadedFileUrl = $cloudinary->uploadApi()->upload($request->file('CaminhoImagem')->getRealPath());
+
+        $requestData = $request->all();
+        $requestData['CaminhoImagem'] = $uploadedFileUrl['secure_url'];
+
+        // Criar o projeto com os dados do request
+        $projeto = Projeto::create($requestData);
 
         return response()->json([
-            'status'=>true,
-            'message'=>"Projeto Criado com Sucesso!",
-            'projeto'=>$projeto
+            'status' => true,
+            'message' => "Projeto Criado com Sucesso!",
+            'projeto' => $projeto
         ], 200);
     }
 
