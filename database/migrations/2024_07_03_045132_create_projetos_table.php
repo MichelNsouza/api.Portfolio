@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('titulo');
             $table->longText('descricao');
+            $table->longText('tecnologias');
+            $table->string('linkCodigoFonte');
+            $table->string('linkDeploy');
             $table->string('CaminhoImagem');
             $table->timestamps();
         });
