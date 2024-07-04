@@ -6,14 +6,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjetoRequest;
 use App\Models\Projeto;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
 
 class ApiProjetoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $projetos = Projeto::all();
@@ -23,17 +21,6 @@ class ApiProjetoController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProjetoRequest $request)
     {
         $request->validate([
@@ -57,35 +44,69 @@ class ApiProjetoController extends Controller
         ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Projeto $projeto)
+    public function show($id)
     {
-        //
+        try {
+            $projeto = Projeto::findOrFail($id);
+            return response()->json([
+                'status' => true,
+                'projeto' => $projeto
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Projeto não encontrado.',
+                'erro' => $e
+
+            ], 404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Projeto $projeto)
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+            'CaminhoImagem' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Projeto $projeto)
-    {
-        //
-    }
+        try {
+            $projeto = Projeto::findOrFail($id);
+            $requestData = $request->all();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Projeto $projeto)
+            if ($request->hasFile('CaminhoImagem')) {
+                $cloudinary = new Cloudinary();
+                $uploadedFileUrl = $cloudinary->uploadApi()->upload($request->file('CaminhoImagem')->getRealPath());
+                $requestData['CaminhoImagem'] = $uploadedFileUrl['secure_url'];
+            }
+
+            $projeto->update($requestData);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Projeto Atualizado com Sucesso!",
+                'projeto' => $projeto
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Projeto não encontrado.'
+            ], 404);
+        }
+    }
+    public function destroy($id)
     {
-        //
+        try {
+            $projeto = Projeto::findOrFail($id);
+            $projeto->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => "Projeto Deletado com Sucesso!"
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Projeto não encontrado.'
+            ], 404);
+        }
     }
 }
