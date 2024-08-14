@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 
@@ -17,18 +17,22 @@ class ApiProjetoController extends Controller
 {
     public function index()
     {
-
-
-        return Cache::remember('projetos:all', 60, function (){
-
+        $redis = Redis::connection('default');
+        $cachePorjetos = $redis->get('projetos:all');
+        if($cachePorjetos){
+            Log::info('Usando cache');
+            $dadosJson = json_decode($cachePorjetos);
+        }else {
             $projetos = Projeto::all();
-            $jsonData = [
+            $dadosJson = [
                 'status' => true,
                 'projetos' => $projetos
             ];
 
-            return response()->json($jsonData);
-        });
+            $redis->set('projetos:all',json_encode($dadosJson));
+            Log::info('consultando o banco');
+        }
+        return response()->json($dadosJson);
     }
 
     public function store(StoreProjetoRequest $request)
