@@ -1,66 +1,74 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gerenciador de Portfolio - BackEnd
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Sobre o Projeto
+O projeto trata-se de uma api Restful que gerencia os projetos de meu proprio portfolio :)
 
-## About Laravel
+## Tecnologias Utilizadas no Back-end
+- Laravel: Deploy no vercel
+- MySql: FreeHostia
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Endpoints
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Esta é uma API RESTful e no momento, não há autenticação via token, portanto, você pode realizar as requisições diretamente para os seguintes endpoints:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Base URL:** `https://api-portfolio-michel-souza.vercel.app/api/api`  
+(Note que o caminho inclui `/api/api` devido à configuração no Vercel rsrs.)
 
-## Learning Laravel
+Modelo Json:
+     
+```json
+{
+  "titulo": "Titulo do projeto",
+  "descricao": "Descrição do projeto",
+  "tecnologias": "Tecnologias presente no projeto",
+  "linkCodigoFonte": "github.com/xpto",
+  "linkDeploy": "projetoXPTO.com",
+  "CaminhoImagem": "enviar a imagem no corpo, onde a aplicação realiza o tratamento e retorna a caminho",
+}
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Métodos e Rotas
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Listar todos os projetos**
+   - **Método:** `GET`
+   - **Rota:** `/projetos`
+   - **Descrição:** Recupera uma lista de todos os projetos.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Criar um novo projeto**
+   - **Método:** `POST`
+   - **Rota:** `/projetos`
+   - **Descrição:** Cria um novo projeto. É necessário enviar os dados do projeto no corpo da requisição.
 
-## Laravel Sponsors
+3. **Mostrar um projeto específico**
+   - **Método:** `GET`
+   - **Rota:** `/projetos/{projeto_id}`
+   - **Descrição:** Recupera as informações de um projeto específico baseado no `projeto_id`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. **Atualizar um projeto específico**
+   - **Método:** `PUT` ou `PATCH`
+   - **Rota:** `/projetos/{projeto_id}`
+   - **Descrição:** Atualiza um projeto específico baseado no `projeto_id`. Os dados atualizados devem ser enviados no corpo da requisição.
 
-### Premium Partners
+5. **Excluir um projeto específico**
+   - **Método:** `DELETE`
+   - **Rota:** `/projetos/{projeto_id}`
+   - **Descrição:** Remove um projeto específico baseado no `projeto_id`.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
+## Front-end
+- VueJs Deploy no vercel
+    - BootStrap
+    - Pinia - gerenciamento de estado
+    - Vue-Router - Roteamento baseado em componente
+    - Axios -  Cliente HTTP 
+    - Vite -  Pré-empacotamento de dependência
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+O código-fonte do Front-end associado a este projeto pode ser encontrado no seguinte repositório do GitHub: [Front-End gerenciador de Portfolio](https://github.com/MichelNsouza/front.Portfolio).
 
-## Code of Conduct
+### Imagens
+![image](https://github.com/user-attachments/assets/3e042130-921d-446e-ab06-fee3d9d4d71b)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
 ## License
-
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
